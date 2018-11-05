@@ -1,11 +1,59 @@
 #include <iostream>
 #include <list>
 #include <queue>
+#include <math.h>
 using namespace std;
+
+#define pi 3.14159265358979323846
+
+//double f(double x)
+//{
+//	return sin(x) +sin(10.0 * x / 3.0);
+//}
+
+//double f(double x)
+//{
+//	double s = 0.0;
+//	for (int k = 1; k <= 5; k++)
+//	{
+//		s += k * sin((k + 1) * x + k);
+//	}
+//	return -1.0 * s;
+//}
+
+//double f(double x)
+//{
+//	return (3.0 * x - 1.4) * sin(18.0 * x);
+//}
+
+//double f(double x)
+//{
+//	return -1.0 * (x + sin(x)) * exp(-1.0 * x * x);
+//}
+
+//double f(double x)
+//{
+//	return sin(x) + sin(10.0 * x / 3.0) + log(x) - 0.84 * x + 3.0;
+//}
+
+//double f(double x)
+//{
+//	return -1.0 * sin(2.0 * pi * x) * exp(-1.0 * x);
+//}
+
+//double f(double x)
+//{
+//	return (x * x - 5.0 * x + 6.0) / (x * x + 1.0);
+//}
+
+//double f(double x)
+//{
+//	return -1.0 * x + sin(3.0 * x) - 1.0;
+//}
 
 double f(double x)
 {
-	return x * x;
+	return 2.0 * (x - 3.0) * (x - 3.0) + exp(x * x / 2.0);
 }
 
 struct point
@@ -64,6 +112,7 @@ point* insertup_list(list<point> &p, point &xk)
 
 int main()
 {
+	double ddd = f(0.0866);
 	int v = 1;
 	do
 	{
@@ -113,6 +162,7 @@ int main()
 			{
 				while (!q.empty())
 					q.pop();
+				
 
 				itr = itl = p.begin();
 				itr++;
