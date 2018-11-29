@@ -2,14 +2,15 @@
 #include <list>
 #include <queue>
 #include <math.h>
+#include <ctime>
 using namespace std;
 
 #define pi 3.14159265358979323846
 
-//double f(double x)
-//{
-//	return sin(x) +sin(10.0 * x / 3.0);
-//}
+double f(double x)
+{
+	return sin(x) + sin(10.0 * x / 3.0);
+}
 
 //double f(double x)
 //{
@@ -51,10 +52,10 @@ using namespace std;
 //	return -1.0 * x + sin(3.0 * x) - 1.0;
 //}
 
-double f(double x)
-{
-	return 2.0 * (x - 3.0) * (x - 3.0) + exp(x * x / 2.0);
-}
+//double f(double x)
+//{
+//	return 2.0 * (x - 3.0) * (x - 3.0) + exp(x * x / 2.0);
+//}
 
 struct point
 {
@@ -118,11 +119,12 @@ int main()
 	{
 		list<point> p;
 		priority_queue<interval> q;
-		list<point>::iterator itl, itr, itrm, itlm;
+		list<point>::iterator itl, itr;
 		interval zk;
 
 		double a, b, ee, m = -1.0, r, mm, minf, minx;
 		int k, n;
+		int st, en;
 		r = 2.0;
 
 		cout << "Write left and right side" << endl;
@@ -132,12 +134,14 @@ int main()
 		cout << "Write inaccuracy" << endl;
 		cin >> ee;
 
+		st = clock();
+
 		point a0(a, f(a));
 		point b0(b, f(b));
 		p.push_back(a0);
 		p.push_back(b0);
 
-		k = 0;
+		k = 1;
 		do
 		{
 			double mold = m;
@@ -203,6 +207,9 @@ int main()
 			itl++;
 		}
 
+		en = clock();
+
+		cout << "Time work = " << (double)(en - st) / 1000 << endl;
 		cout << "Min f = " << minf << endl;
 		cout << "Arg min f = " << minx << endl;
 		cout << "Number iterations = " << k << endl;
