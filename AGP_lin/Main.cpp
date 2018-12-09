@@ -7,55 +7,93 @@ using namespace std;
 
 #define pi 3.14159265358979323846
 
-double f(double x)
+double f1(double x)
 {
-	return sin(x) + sin(10.0 * x / 3.0);
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return sin(x) + sin(10.0 * x / 3.0) + sum;
 }
 
-//double f(double x)
-//{
-//	double s = 0.0;
-//	for (int k = 1; k <= 5; k++)
-//	{
-//		s += k * sin((k + 1) * x + k);
-//	}
-//	return -1.0 * s;
-//}
+double f2(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	double s = 0.0;
+	for (int k = 1; k <= 5; k++)
+	{
+		s += k * sin((k + 1) * x + k);
+	}
+	return -1.0 * s + sum;
+}
 
-//double f(double x)
-//{
-//	return (3.0 * x - 1.4) * sin(18.0 * x);
-//}
+double f3(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return (3.0 * x - 1.4) * sin(18.0 * x) + sum;
+}
 
-//double f(double x)
-//{
-//	return -1.0 * (x + sin(x)) * exp(-1.0 * x * x);
-//}
+double f4(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return -1.0 * (x + sin(x)) * exp(-1.0 * x * x) + sum;
+}
 
-//double f(double x)
-//{
-//	return sin(x) + sin(10.0 * x / 3.0) + log(x) - 0.84 * x + 3.0;
-//}
+double f5(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return sin(x) + sin(10.0 * x / 3.0) + log(x) - 0.84 * x + 3.0 + sum;
+}
 
-//double f(double x)
-//{
-//	return -1.0 * sin(2.0 * pi * x) * exp(-1.0 * x);
-//}
+double f6(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return -1.0 * sin(2.0 * pi * x) * exp(-1.0 * x) + sum;
+}
 
-//double f(double x)
-//{
-//	return (x * x - 5.0 * x + 6.0) / (x * x + 1.0);
-//}
+double f7(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return (x * x - 5.0 * x + 6.0) / (x * x + 1.0) + sum;
+}
 
-//double f(double x)
-//{
-//	return -1.0 * x + sin(3.0 * x) - 1.0;
-//}
+double f8(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return -1.0 * x + sin(3.0 * x) - 1.0 + sum;
+}
 
-//double f(double x)
-//{
-//	return 2.0 * (x - 3.0) * (x - 3.0) + exp(x * x / 2.0);
-//}
+double f9(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return 2.0 * (x - 3.0) * (x - 3.0) + exp(x * x / 2.0) + sum;
+}
+
+double(*f[9])(double) = { f1, f2, f3, f4, f5, f6, f7, f8, f9 };
 
 struct point
 {
@@ -97,23 +135,22 @@ double Rfunc(const point &lp_, const point &rp_, double m)
 	return (m * dx + dz * dz / (m * dx) - 2.0 * (rp_.z + lp_.z));
 }
 
-point* insertup_list(list<point> &p, point &xk)
+point* insertup_list(list<point> *p, point *xk)
 {
 	list<point>::iterator itl, itr;
-	itl = itr = p.begin();
-	while ((itr != p.end()) && (itr->x < xk.x))
+	itl = itr = (*p).begin();
+	while ((itr != (*p).end()) && (itr->x < (*xk).x))
 	{
 		itl = itr;
 		itr++;
 	}
-	p.insert(itr, xk);
+	(*p).insert(itr, (*xk));
 	itl++;
 	return &(*itl);
 }
 
 int main()
 {
-	double ddd = f(0.0866);
 	int v = 1;
 	do
 	{
@@ -123,10 +160,12 @@ int main()
 		interval zk;
 
 		double a, b, ee, m = -1.0, r, mm, minf, minx;
-		int k, n;
+		int k, n, j;
 		int st, en;
 		r = 2.0;
 
+		cout << "Write numper function" << endl;
+		cin >> j;
 		cout << "Write left and right side" << endl;
 		cin >> a >> b;
 		cout << "Write number iterations" << endl;
@@ -136,8 +175,8 @@ int main()
 
 		st = clock();
 
-		point a0(a, f(a));
-		point b0(b, f(b));
+		point a0(a, f[j](a));
+		point b0(b, f[j](b));
 		p.push_back(a0);
 		p.push_back(b0);
 
@@ -183,8 +222,8 @@ int main()
 
 			double xk = 0.5 * (zk.rp->x + zk.lp->x) - ((zk.rp->z - zk.lp->z) / (2.0 * m));
 
-			point t(xk, f(xk));
-			point* tt = insertup_list(p, t);
+			point t(xk, f[j](xk));
+			point* tt = insertup_list(&p, &t);
 
 			q.push(interval(Rfunc(*zk.lp, *tt, m), zk.lp, tt));
 			q.push(interval(Rfunc(*tt, *zk.rp, m), tt, zk.rp));
