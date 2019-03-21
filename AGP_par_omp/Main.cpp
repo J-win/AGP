@@ -300,7 +300,7 @@ int main()
 			zk[3] = q.top();
 			q.pop();
 
-			#pragma omp parallel shared(zk, t) firstprivate(m, j)
+			#pragma omp parallel shared(zk, t) //firstprivate(m, j)
 			{
 				int nt = omp_get_thread_num();
 				double xk = 0.5 * (zk[nt].rp->x + zk[nt].lp->x) - ((zk[nt].rp->z - zk[nt].lp->z) / (2.0 * m));
