@@ -13,84 +13,117 @@
 
 #define pi 3.14159265358979323846
 
-double f1(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return sin(x) + sin(10.0 * x / 3.0) + sum;
+double f1(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return sin(x) + sin(10.0 * x / 3.0) + sum;
 }
 
-double f2(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return (3.0 * x - 1.4) * sin(18.0 * x) + sum;
+double f2(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	double s = 0.0;
+	for (int k = 1; k <= 5; k++)
+	{
+		s += k * sin((k + 1) * x + k);
+	}
+	return -1.0 * s + sum;
 }
 
-double f3(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return -1.0 * (x + sin(x)) * exp(-1.0 * x * x) + sum;
+double f3(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return (3.0 * x - 1.4) * sin(18.0 * x) + sum;
 }
 
-double f4(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return sin(x) + sin(10.0 * x / 3.0) + log(x) - 0.84 * x + 3.0 + sum;
+double f4(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return -1.0 * (x + sin(x)) * exp(-1.0 * x * x) + sum;
 }
 
-double f5(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return -1.0 * sin(2.0 * pi * x) * exp(-1.0 * x) + sum;
+double f5(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return sin(x) + sin(10.0 * x / 3.0) + log(x) - 0.84 * x + 3.0 + sum;
 }
 
-double f6(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return (x * x - 5.0 * x + 6.0) / (x * x + 1.0) + sum;
+double f6(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return -1.0 * sin(2.0 * pi * x) * exp(-1.0 * x) + sum;
 }
 
-double f7(double x) {
-  double sum = 0.0;
-  for (int i = 1; i <= 100000; i++ )
-sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
-  sum -= 100000;
-  return -1.0 * x + sin(3.0 * x) - 1.0 + sum;
+double f7(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return (x * x - 5.0 * x + 6.0) / (x * x + 1.0) + sum;
 }
 
-double (*f[7])(double) = { f1, f2, f3, f4, f5, f6, f7 };
+double f8(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return -1.0 * x + sin(3.0 * x) - 1.0 + sum;
+}
+
+double f9(double x)
+{
+	double sum = 0.0;
+	for (int i = 1; i <= 100000; i++)
+		sum += sin(sin(sin(i)))*sin(sin(sin(i))) + cos(sin(sin(i)))*cos(sin(sin(i)));
+	sum -= 100000;
+	return 2.0 * (x - 3.0) * (x - 3.0) + exp(x * x / 2.0) + sum;
+}
+
+double((*f[9]))(double x) { f1, f2, f3, f4, f5, f6, f7, f8, f9 };
 
 struct limit {
-  double a;
-  double b;
-  double x;
-  double z;
-  explicit limit(double a0 = 0, double b0 = 0, double x_ = 0, double z_ = 0) {
-    a = a0;
-    b = b0;
-    x = x_;
-    z = z_;
-  }
+	double a;
+	double b;
+	double x;
+	double z;
+	explicit limit(double a0 = 0, double b0 = 0, double x_ = 0, double z_ = 0) {
+		a = a0;
+		b = b0;
+		x = x_;
+		z = z_;
+	}
 };
 
-limit fun[7] = { limit(2.7, 7.5, 5.145735, -1.899599),
+limit fun[9] = { limit(2.7, 7.5, 5.145735, -1.899599),
+limit(0.0, 10.0, 5.791785, -12.031250),
 limit(0.0, 1.2, 0.96609, -1.48907),
 limit(-10.0, 10.0, 0.679560, -0.824239),
 limit(2.7, 7.5, 5.19978, -1.60130),
 limit(0.0, 4.0, 0.224885, -0.788685),
 limit(-5.0, 5.0, 2.41420, -0.03553),
-limit(0.0, 6.5, 5.877287, -7.815670) };
+limit(0.0, 6.5, 5.877287, -7.815670),
+limit(-3.0, 3.0, 1.590700, 7.515924) };
+
 
 int converter_in_number(const std::string &s) {
   int len = s.length();

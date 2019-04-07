@@ -223,13 +223,12 @@ int main()
 		list<point> p;
 		priority_queue<interval> q;
 		list<point>::iterator itl, itr;
-		interval zk[4];
-		point t[4];
 		point* tt;
 
 		double a, b, ee, m = -1.0, r, mm, minf, minx;
-		int k, n, j;
+		int k, n, j, ompk;
 		int st, sr, en;
+		bool end = false;
 		r = 2.0;
 
 		cout << "Write number function" << endl;
@@ -240,6 +239,11 @@ int main()
 		cin >> n;
 		cout << "Write inaccuracy" << endl;
 		cin >> ee;
+		cout << "Write number potok" << endl;
+		cin >> ompk;
+
+		interval* zk = new interval[ompk];
+		point* t = new point[ompk];
 
 		st = clock();
 
@@ -250,8 +254,8 @@ int main()
 		cout << "Lin time work = " << (double)(sr - st) / 1000 << endl;
 		cout << endl;
 
-		double pr = (b - a) / 4;
-		for (int i = 0; i < 4; i++)
+		double pr = (b - a) / ompk;
+		for (int i = 0; i < ompk; i++)
 			p.push_back(point(a + pr * i, f[j](a + pr * i)));
 		p.push_back(point(b, f[j](b)));
 
@@ -291,16 +295,14 @@ int main()
 					itr++;
 				}
 			}
-			zk[0] = q.top();
-			q.pop();
-			zk[1] = q.top();
-			q.pop();
-			zk[2] = q.top();
-			q.pop();
-			zk[3] = q.top();
-			q.pop();
 
-			#pragma omp parallel shared(zk, t) //firstprivate(m, j)
+			for (int i = 0; i < ompk; i++)
+			{
+				zk[i] = q.top();
+				q.pop();
+			}
+
+			#pragma omp parallel num_threads(ompk) shared(zk, t)
 			{
 				int nt = omp_get_thread_num();
 				double xk = 0.5 * (zk[nt].rp->x + zk[nt].lp->x) - ((zk[nt].rp->z - zk[nt].lp->z) / (2.0 * m));
@@ -308,23 +310,17 @@ int main()
 				t[nt].z = f[j](xk);
 			}
 
-			tt = insertup_list(&p, &t[0]);
-			q.push(interval(Rfunc(*zk[0].lp, *tt, m), zk[0].lp, tt));
-			q.push(interval(Rfunc(*tt, *zk[0].rp, m), tt, zk[0].rp));
-
-			tt = insertup_list(&p, &t[1]);
-			q.push(interval(Rfunc(*zk[1].lp, *tt, m), zk[1].lp, tt));
-			q.push(interval(Rfunc(*tt, *zk[1].rp, m), tt, zk[1].rp));
-
-			tt = insertup_list(&p, &t[2]);
-			q.push(interval(Rfunc(*zk[2].lp, *tt, m), zk[2].lp, tt));
-			q.push(interval(Rfunc(*tt, *zk[2].rp, m), tt, zk[2].rp));
-
-			tt = insertup_list(&p, &t[3]);
-			q.push(interval(Rfunc(*zk[3].lp, *tt, m), zk[3].lp, tt));
-			q.push(interval(Rfunc(*tt, *zk[3].rp, m), tt, zk[3].rp));
-			k += 4;
-		} while (((zk[0].rp->x - zk[0].lp->x > ee) || (zk[1].rp->x - zk[1].lp->x > ee) || (zk[2].rp->x - zk[2].lp->x > ee) || (zk[3].rp->x - zk[3].lp->x > ee)) && (k < n));
+			end = false;
+			for (int i = 0; i < ompk; i++)
+			{
+				tt = insertup_list(&p, &t[i]);
+				q.push(interval(Rfunc(*zk[i].lp, *tt, m), zk[i].lp, tt));
+				q.push(interval(Rfunc(*tt, *zk[i].rp, m), tt, zk[i].rp));
+				if (zk[i].rp->x - zk[i].lp->x > ee)
+					end = true;
+			}
+			k += ompk;
+		} while ((end) && (k < n));
 
 		itl = p.begin();
 		minf = itl->z;
@@ -342,6 +338,9 @@ int main()
 		}
 
 		en = clock();
+
+		delete[] zk;
+		delete[] t;
 
 		cout << "Arg min f = " << minx << endl;
 		cout << "Min f = " << minf << endl;
