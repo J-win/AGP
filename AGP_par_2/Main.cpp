@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ctime>
 #include <thread>
+#include <vector>
 #include <mutex>
 using namespace std;
 
@@ -267,12 +268,13 @@ int main()
 		list<point> p;
 		list<point>::iterator itl, itr;
 		priority_queue<interval> q;
-		interval zk1, zk2, zk3, zk4;
+		interval *zk;
 
 		double a, b, ee, m = -1.0, minf, minx;
 		int k, n, j;
-		int st, sr, en;
-		bool f1, f2, f3, f4;
+		int st, sr, en, np;
+		bool end;
+		bool *ff;
 		double mold = m;
 		double mm = 0.0;
 		double r = 2.0;
@@ -285,6 +287,11 @@ int main()
 		cin >> n;
 		cout << "Write inaccuracy" << endl;
 		cin >> ee;
+		cout << "Write numper potoks" << endl;
+		cin >> np;
+
+		zk = new interval[np];
+		ff = new bool[np];
 
 		st = clock();
 
@@ -295,8 +302,8 @@ int main()
 		cout << "Lin time work = " << (double)(sr - st) / 1000 << endl;
 		cout << endl;
 
-		double pr = (b - a) / 4;
-		for (int i = 0; i < 4; i++)
+		double pr = (b - a) / np;
+		for (int i = 0; i < np; i++)
 			p.push_back(point(a + pr * i, f[j](a + pr * i)));
 		p.push_back(point(b, f[j](b)));
 
@@ -333,23 +340,18 @@ int main()
 		do
 		{
 			mold = m;
-			zk1 = q.top();
-			q.pop();
-			zk2 = q.top();
-			q.pop();
-			zk3 = q.top();
-			q.pop();
-			zk4 = q.top();
-			q.pop();
-			thread p1(agp_potok, ref(q), ref(p), ref(zk1), ref(m), ref(f1), ee, j);
-			thread p2(agp_potok, ref(q), ref(p), ref(zk2), ref(m), ref(f2), ee, j);
-			thread p3(agp_potok, ref(q), ref(p), ref(zk3), ref(m), ref(f3), ee, j);
-			thread p4(agp_potok, ref(q), ref(p), ref(zk4), ref(m), ref(f4), ee, j);
-			p1.join();
-			p2.join();
-			p3.join();
-			p4.join();
-			k += 4;
+			vector<thread> ths;
+
+			for (int i = 0; i < np; i++)
+			{
+				zk[i] = q.top();
+				q.pop();
+			}
+			for (int i = 0; i < np; i++)
+				ths.push_back(thread(agp_potok, ref(q), ref(p), ref(zk[i]), ref(m), ref(ff[i]), ee, j));
+			for (auto & th : ths)
+				th.join();
+			k += np;
 			if (mold != m)
 			{
 				while (!q.empty())
@@ -365,7 +367,13 @@ int main()
 					itr++;
 				}
 			}
-		} while (((f1) || (f2) || (f3) || (f4)) && (k < n));
+			end = false;
+			for (int i = 0; i < np; i++)
+			{
+				if (f[i])
+					end = true;
+			}
+		} while ((end) && (k < n));
 
 		itl = p.begin();
 		minf = itl->z;

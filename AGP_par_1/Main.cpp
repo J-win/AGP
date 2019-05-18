@@ -3,6 +3,7 @@
 #include <queue>
 #include <math.h>
 #include <ctime>
+#include <vector>
 #include <thread>
 using namespace std;
 
@@ -230,13 +231,14 @@ int main()
 		list<point> p;
 		priority_queue<interval> q;
 		list<point>::iterator itl, itr;
-		interval zk1, zk2, zk3, zk4;
-		point t1, t2, t3, t4;
+		interval *zk;
+		point *t;
 		point* tt;
 
 		double a, b, ee, m = -1.0, r, mm, minf, minx;
-		int k, n, j;
+		int k, n, j, np;
 		int st, sr, en;
+		bool end;
 		r = 2.0;
 
 		cout << "Write number function" << endl;
@@ -247,6 +249,11 @@ int main()
 		cin >> n;
 		cout << "Write inaccuracy" << endl;
 		cin >> ee;
+		cout << "Write numper potoks" << endl;
+		cin >> np;
+
+		zk = new interval[np];
+		t = new point[np];
 
 		st = clock();
 
@@ -257,8 +264,8 @@ int main()
 		cout << "Lin time work = " << (double)(sr - st) / 1000 << endl;
 		cout << endl;
 
-		double pr = (b - a) / 4;
-		for (int i = 0; i < 4; i++)
+		double pr = (b - a) / np;
+		for (int i = 0; i < np; i++)
 			p.push_back(point(a + pr * i, f[j](a + pr * i)));
 		p.push_back(point(b, f[j](b)));
 
@@ -298,36 +305,30 @@ int main()
 					itr++;
 				}
 			}
-			zk1 = q.top();
-			q.pop();
-			zk2 = q.top();
-			q.pop();
-			zk3 = q.top();
-			q.pop();
-			zk4 = q.top();
-			q.pop();
-			thread p1(agp_potok, ref(zk1), ref(t1), m, j);
-			thread p2(agp_potok, ref(zk2), ref(t2), m, j);
-			thread p3(agp_potok, ref(zk3), ref(t3), m, j);
-			thread p4(agp_potok, ref(zk4), ref(t4), m, j);
-			p1.join();
-			p2.join();
-			p3.join();
-			p4.join();
-			tt = insertup_list(&p, &t1);
-			q.push(interval(Rfunc(*zk1.lp, *tt, m), zk1.lp, tt));
-			q.push(interval(Rfunc(*tt, *zk1.rp, m), tt, zk1.rp));
-			tt = insertup_list(&p, &t2);
-			q.push(interval(Rfunc(*zk2.lp, *tt, m), zk2.lp, tt));
-			q.push(interval(Rfunc(*tt, *zk2.rp, m), tt, zk2.rp));
-			tt = insertup_list(&p, &t3);
-			q.push(interval(Rfunc(*zk3.lp, *tt, m), zk3.lp, tt));
-			q.push(interval(Rfunc(*tt, *zk3.rp, m), tt, zk3.rp));
-			tt = insertup_list(&p, &t4);
-			q.push(interval(Rfunc(*zk4.lp, *tt, m), zk4.lp, tt));
-			q.push(interval(Rfunc(*tt, *zk4.rp, m), tt, zk4.rp));
-			k += 4;
-		} while (((zk1.rp->x - zk1.lp->x > ee) || (zk2.rp->x - zk2.lp->x > ee) || (zk3.rp->x - zk3.lp->x > ee) || (zk4.rp->x - zk4.lp->x > ee)) && (k < n));
+			vector<thread> ths;
+
+			for (int i = 0; i < np; i++)
+			{
+				zk[i] = q.top();
+				q.pop();
+			}
+			for (int i = 0; i < np; i++)
+				ths.push_back(thread(agp_potok, ref(zk[i]), ref(t[i]), m, j));
+			for (auto & th : ths)
+				th.join();
+
+			end = false;
+			for (int i = 0; i < np; i++)
+			{
+				tt = insertup_list(&p, &t[i]);
+				q.push(interval(Rfunc(*zk[i].lp, *tt, m), zk[i].lp, tt));
+				q.push(interval(Rfunc(*tt, *zk[i].rp, m), tt, zk[i].rp));
+
+				if (zk[i].rp->x - zk[i].lp->x > ee)
+					end = true;
+			}
+			k += np;
+		} while ((end) && (k < n));
 
 		itl = p.begin();
 		minf = itl->z;
@@ -345,6 +346,9 @@ int main()
 		}
 
 		en = clock();
+
+		delete[] zk;
+		delete[] t;
 
 		cout << "Arg min f = " << minx << endl;
 		cout << "Min f = " << minf << endl;
